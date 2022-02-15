@@ -13,9 +13,9 @@ s.mount('http://', HTTPAdapter(max_retries=3))
 s.mount('https://', HTTPAdapter(max_retries=3))
 
 
-class MyThread(Thread):
-    def __init__(self, q,name):
-        Thread.__init__(self)
+class MyThread(Thread):  # 定义一个类，继承Thread
+    def __init__(self, q,name):  # 初始化方法，接收q,name参数。
+        Thread.__init__(self)   # 继承父类的初始化方法。
         self.q = q
         self.name = name
     def run(self):   # 重写run方法
@@ -37,9 +37,6 @@ class MyThread(Thread):
                 f.write(title_1 + '\n' + text_1 + '\n')           # 章节内容
                 print(self.name,f'{title_1}--------保存成功！！！!!')
                 index += 1
-
-        print('全部下载结束!!!！！！！!!!!!!!!!!!!!!!!')
-
 if __name__ == '__main__':
     index = -1  # 章节索引标记，表示保存的章数
     base = 'https://www.bige9.com/book/17291/'
@@ -49,21 +46,23 @@ if __name__ == '__main__':
     res = s.get(base, headers = head ,timeout=(3,7))
     page = etree.HTML(res.text)
     title = page.xpath('//div[@class="book"]//h1/text()')[0]
-    f = open(f'./{title}.txt', 'w+', encoding='utf-8')
-    f.write(title + '\n')
-    qq = []
-    q = Queue()
-    for i in range(1,2032):
-        url =f'https://www.bige9.com/book/17291/{i}.html'
-        qq.append(url)
-        # print(qq)
-    for j in enumerate(qq):
-        q.put(j,qq)
-        # print(q.get())
-    ts = []
-    for i in range(5):   # 创建5个线程
-        t = MyThread(q, name = f'线程--->{i}')
-        t.start()            # 开始线程
-        ts.append(t)    # 开始的线程加入列表ts
-    for t in ts:
-        t.join()
+    # f = open(f'./{title}.txt', 'w+', encoding='utf-8')
+    with open(f'./{title}.txt', 'w+', encoding='utf-8') as f:
+        f.write(title + '\n')
+        qq = []
+        q = Queue()
+        for i in range(1,5):
+            url =f'https://www.bige9.com/book/17291/{i}.html'
+            qq.append(url)
+            # print(qq)
+        for j in enumerate(qq):
+            q.put(j,qq)
+            # print(q.get())
+        ts = []
+        for ii in range(5):   # 创建5个线程
+            t = MyThread(q, name = f'线程--->{ii}')  # 实例化mythread,类，把队队Q,参数name传过去。
+            t.start()            # 开始线程
+            ts.append(t)    # 开始的线程加入列表ts
+        for t in ts:
+            t.join()
+    print('下载全部结束!!!!!!!')
