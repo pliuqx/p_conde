@@ -13,4 +13,3 @@ def firl_save(title,data):
 if __name__ == '__main__':
     file = open('zz.txt', 'w+', encoding='utf-8')
     firl_save(title, data)
-    pass
