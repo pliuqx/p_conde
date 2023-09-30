@@ -11,11 +11,9 @@ def txt_save(datalist):
     # 创建游标
     cursor = conn.cursor()
     cursor.execute('use xs')
+    sql = ("insert into xhaoxu(txt) values(%s)")
     for i in datalist:
-        sql = ("insert into xhaoxu(txt) values(%s)")
         cursor.execute(sql, (i))
         conn.commit()
     conn.close()
     print(datalist)
-if __name__ == '__main__':
-    pass

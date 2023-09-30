@@ -13,5 +13,3 @@ def save(self, data):
     # file.write(str(data))  # 写入文章正文
 
 
-if __name__ == '__main__':
-    pass
